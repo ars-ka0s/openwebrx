@@ -73,6 +73,7 @@ class FeatureDetector(object):
         "sddc": ["sddc_connector"],
         "hpsdr": ["hpsdr_connector"],
         "runds": ["runds_connector"],
+        "eesdr": ["eesdr_connector"],
         # optional features and their requirements
         "digital_voice_digiham": ["digiham", "codecserver_ambe"],
         "digital_voice_freedv": ["freedv_rx"],
@@ -595,6 +596,14 @@ class FeatureDetector(object):
         allows using R&S radios via EB200 or Ammos.
         """
         return self._check_connector("runds_connector", LooseVersion("0.2"))
+
+    def has_eesdr_connector(self):
+        """
+        The eesdr-owrx-connector supports Expert Electronics radios via the TCI protocol.
+
+        It is available from [GitHub](https://github.com/ars-ka0s/eesdr-owrx-connector).
+        """
+        return self.command_is_runnable("eesdr-owrx-connector -h")
 
     def has_codecserver_ambe(self):
         """

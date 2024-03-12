@@ -11,6 +11,7 @@ from typing import List
 #    --frequency  - Center frequency in Hz
 #    --samplerate - Sample rate in Hz; 48000, 96000, 192000, 384000 are valid
 #    --control    - Control port number
+#    --startstop  - Start/stop the whole radio device alongside the IQ stream
 #    --verbose    - Show additional details in the log
 
 class EesdrSource(ConnectorSource):
@@ -25,6 +26,7 @@ class EesdrSource(ConnectorSource):
                     "receiver": Option("--receiver"),
                     "tuner_freq": Option("--frequency"),
                     "samp_rate": Option("--samplerate"),
+                    "startstop": Flag("--startstop"),
                     "verbose": Flag("--verbose"),
                 }
             )
@@ -47,16 +49,23 @@ class EesdrDeviceDescription(ConnectorDeviceDescription):
                 validator=RangeValidator(0, 1)
             ),
             CheckboxInput(
+                "startstop",
+                "Start/stop the entire radio device in addition to the IQ stream"
+            ),
+            CheckboxInput(
                 "verbose",
                 "Show additional details in the log"
             ),
         ]
 
+    def supportsPpm(self):
+        return False
+
     def getDeviceOptionalKeys(self):
-        return list(filter(lambda x : x not in ["rtltcp_compat", "iqswap"], super().getDeviceOptionalKeys())) + ["device", "receiver", "verbose"]
+        return list(filter(lambda x : x not in ["rtltcp_compat", "iqswap", "rf_gain"], super().getDeviceOptionalKeys())) + ["device", "receiver", "startstop", "verbose"]
 
     def getProfileOptionalKeys(self):
-        return list(filter(lambda x : x not in ["iqswap"], super().getProfileOptionalKeys()))
+        return list(filter(lambda x : x not in ["iqswap", "rf_gain"], super().getProfileOptionalKeys()))
 
     def getSampleRateRanges(self) -> List[Range]:
         return [

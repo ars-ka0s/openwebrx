@@ -217,6 +217,14 @@ class Modes(object):
             squelch=True
         ),
         DigitalMode(
+            "eassame",
+            "EAS SAME",
+            underlying=["nfm"],
+            requirements=["eas_same"],
+            service=True,
+            squelch=False
+        ),
+        DigitalMode(
             "zvei",
             "Zvei",
             underlying=["nfm"],
